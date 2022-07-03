@@ -8,7 +8,7 @@ fun mergeTwoLists(list1: ListNode?, list2: ListNode?): ListNode? {
     var newHead: ListNode? = null
     var tail: ListNode? = null
     while(l1 != null && l2 != null){
-        var temp : ListNode? = null
+        var temp: ListNode?
         if(l1.`val` < l2.`val`) {
             temp = l1
             l1 = l1.next
