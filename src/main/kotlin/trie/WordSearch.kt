@@ -3,32 +3,26 @@ package trie
 class TrieNode(val child: HashMap<Char, TrieNode> = HashMap(), var isEnd: Boolean = false, var word: String = "")
 fun insert(temp: TrieNode, word:String){
     var root = temp
-    word.forEach{i ->
-        if(root.child[i] == null)root.child[i] = TrieNode()
-        root = root.child[i]!!
+    word.forEach{
+        if(root.child[it] == null)root.child[it] = TrieNode()
+        root = root.child[it]!!
     }
     root.isEnd = true
     root.word = word
 }
 fun findWords(board: Array<CharArray>, words: Array<String>): List<String> {
     val r = board.size; val c = board[0].size;
-    val direction = arrayOf(1 to 0, 0 to 1, -1 to 0, 0 to -1)
+    val visit = mutableSetOf<String>()
     val res = mutableSetOf<String>()
-    val visit = HashSet<String>()
+    val directions = arrayOf(1 to 0, 0 to 1, -1 to 0, 0 to -1)
     fun find(i: Int, j: Int, root: TrieNode){
-        if(root.isEnd){
-            res.add(root.word)
-        }
+        if(root.isEnd)res.add(root.word)
         val key = "$i $j"
-        if(i < 0 || i >= r || j < 0 || j >= c || root.child[board[i][j]] == null || visit.contains(key))return
-        val temp = board[i][j]
-        visit.add(key)
-        for(d in direction){
-            val row = i + d.first
-            val col = j + d.second
-            find(row, col, root.child[temp]!!)
+        if(i >= 0 && i < r && j >= 0 && j < c && root.child[board[i][j]] != null && !visit.contains(key)){
+            visit.add(key)
+            for(d in directions)find(i+d.first, j+d.second, root.child[board[i][j]]!!)
+            visit.remove(key)
         }
-        visit.remove(key)
     }
     val root = TrieNode()
     for(i in words)insert(root, i)
