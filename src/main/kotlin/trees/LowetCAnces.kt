@@ -1,7 +1,5 @@
 package trees
 
-data class TreeNode(val data: Int, var left: TreeNode ?= null, var right: TreeNode?= null)
-
 fun lowestCommonAncestor(root: TreeNode, p: TreeNode, q: TreeNode): Int{
     val path1 = ArrayList<Int>()
     val path2 = ArrayList<Int>()
