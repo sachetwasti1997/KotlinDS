@@ -1,14 +1,14 @@
 package trie
 
 class Trie {
-    val charMap = HashMap<Char, TrieNode>()
+    val charMap = HashMap<Char, Trie>()
     var isEnd = false
 
     fun insert(word: String) {
         var temp = this
         for(i in word){
             if(temp.charMap[i] == null){
-                temp.charMap[i] = TrieNode()
+                temp.charMap[i] = Trie()
             }
             temp = temp.charMap[i]!!
         }
