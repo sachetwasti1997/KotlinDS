@@ -10,7 +10,6 @@ fun climbStairs(n: Int): Int {
         }
         return dfs(index+1) + dfs(index+2)
     }
-
     return dfs(0)
 }
 
