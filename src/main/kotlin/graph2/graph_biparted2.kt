@@ -1,35 +1,51 @@
 class Solution {
     fun isBipartite(graph: Array<IntArray>): Boolean {
-        val g = HashMap<Int, ArrayList<Int>>()
-        for(i in 0 until graph.size){
-            for(j in 0 until graph[i].size){
-                if(g[i] == null)g[i] = ArrayList()
-                g[i]?.add(graph[i][j])
-            }
-        }
-        val q = LinkedList<Pair<Int, Int>>()
-        val p1 = mutableSetOf(0)
-        val p2 = HashSet<Int>()
-        val v = HashSet<Int>()
-        
-        for(i in 0 until g.size){
-            if(v.contains(i))continue
-            q.add(Pair(i, 1))
+        val m = HashMap<Int, Int>()
+
+        fun findBiPart(n: Int): Boolean{
+            val q = LinkedList<Int>()
+            m[n] = -1
+            q.add(n)
             while(!q.isEmpty()){
-            val t = q.removeFirst()
-            for(i in g[t.first].orEmpty()){
-                if(t.second == 1){
-                    if(p1.contains(i))return false
-                    p2.add(i)
-                }else{
-                    if(p2.contains(i))return false
-                    p1.add(i)
+                val t = q.removeFirst()
+                for(i in graph[t]){
+                    if(m[i] == null){
+                        q.add(i)
+                    }
+                    if(m[t] == -1){
+                        if(m[i] == -1)return false
+                        m[i] = 1
+                    }else{
+                        if(m[i] == 1)return false
+                        m[i] = -1
+                    }
                 }
-                if(v.contains(i))continue
-                v.add(i)
-                if (t.second == 1) q.add(Pair(i, 2)) else q.add(Pair(i, 1))
             }
+            return true
+        }
+
+        for(i in graph.indices){
+            if(m[i] == null && !findBiPart(i))return false
+        }
+        return true
+    }
+
+    fun isBipartite1(graph: Array<IntArray>): Boolean {
+        val c = HashMap<Int, Int>(graph.size)
+        val v = HashSet<Int>(graph.size)
+        fun find(node: Int): Boolean{
+            v.add(node)
+            val t = c[node]
+            for(i in graph[node]){
+                if(t == c[i])return false
+                t?.let{c[i] = -1 * it}
+                if(!v.contains(i) && !find(i))return false    
             }
+            return true
+        }
+
+        for(i in graph.indices){
+            if(!v.contains(i) && !find(i))return false
         }
         return true
     }
